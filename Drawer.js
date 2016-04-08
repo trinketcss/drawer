@@ -5,7 +5,8 @@ export default class Drawer {
 	constructor($el) {
 		this.$el = $el;
 		this.$container = $($el.data("drawer-container-selector"));
-		this.$controller = $($el.data("drawer-controller-selector"));
+		this.id = $el.attr('id');
+		this.$controller = $( '[aria-controls="#'+this.id+'" ]' );
 		this.$container.addClass("drawer-container");
 		this.on();
 
@@ -22,7 +23,7 @@ export default class Drawer {
 
 	toggle(event) {
 		event.preventDefault();
-		if ( !this.$el.hasClass('is-drawer-open') ) {
+		if ( this.$el.attr('aria-expanded') == "false" ) {
 			this.open();
 		} else {
 			this.close();
@@ -30,17 +31,18 @@ export default class Drawer {
 	}
 
 	open() {
-		this.$el.addClass("is-drawer-open").addClass("is-open");
+		this.$el.attr('aria-expanded',"true");
+		this.$controller.attr('aria-expanded',"true");
+
 		this.$container.addClass("is-drawer-open");
-		this.$controller.addClass("is-drawer-open").addClass("is-open");
+
 
 	}
 
 	close() {
-		this.$el.removeClass("is-drawer-open").removeClass("is-open");
-		this.$container.removeClass("is-drawer-open");
-		this.$controller.removeClass("is-drawer-open").removeClass("is-open");
-
+		this.$el.attr('aria-expanded',"false");
+		this.$controller.attr('aria-expanded',"false");
+		this.$container.remove("is-drawer-open");
 	}
 
 	static init() {
